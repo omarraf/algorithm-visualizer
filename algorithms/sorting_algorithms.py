@@ -105,10 +105,14 @@ def radix_sort(arr):
     while max_val // place > 0: 
         counting_sort(arr, place)
         place *= 10
+    return arr
 
 #Linear search algorithm function
 def linear_search(arr, target):
     indexes = []
+    
+    #loop to look through all elements in arry for target
+    #if found index added to indexes list
     for i in range(len(arr)):
         if arr[i] == target:
             indexes.append(i)
@@ -119,9 +123,8 @@ def generate_list(lower_bound, upper_bound, size):
     
 arr = generate_list(int(input("lower bound: ")), int(input("upper bound: ")), int(input("size: ")))
 print(arr)
-print(quick_sort(arr))
-print(quick_sort([123, 34, 5, 74, 235, 43, 63, 5, 9, 27, 83, 31]))
 print(radix_sort(arr))
+print(quick_sort([123, 34, 5, 74, 235, 43, 63, 5, 9, 27, 83, 31]))
 print(merge_sort([123, 34, 5, 74, 235, 43, 63, 5, 9, 27, 83, 31]))
 print(bubble_sort([123, 34, 5, 74, 235, 43, 63, 5, 9, 27, 83, 31]))
 print(linear_search([123, 34, 5, 74, 235, 43, 63, 5, 9, 27, 83, 31],5))
