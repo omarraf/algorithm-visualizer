@@ -67,9 +67,44 @@ def quick_sort(arr):
     pivot = [pivot]
     return quick_sort(lower_nums) + pivot + quick_sort(greater_nums)
     
-
 #Radix sort algorithm function
-#def radix_sort(arr)
+#create a counting sort function to help sort for a specific digit
+def counting_sort(arr, place):
+    n = len(arr)
+    #output that will store the sorted array
+    output = [0] * n
+    count = [0] * 10
+    
+    #stores the count of occurences 
+    for i in range(n):
+        index = arr[i] // place
+        count[index % 10] += 1
+        
+    #determines the positions in the output array
+    for i in range(1, 10):
+        count[i] += count[i-1] 
+
+    #builds the output array
+    i = n-1
+    while i>=0:
+        index = arr[i] // place
+        output[count[index % 10 ] - 1] = arr[i]
+        count[index % 10] -= 1
+        i -= 1
+    
+    #copies the output array to the actual array
+    for i in range(0, len(arr)):
+        arr[i] = output[i]
+
+def radix_sort(arr):
+    #finds the maximum number to know the number of digits
+    max_val = max(arr)
+
+    #use the counting sort to help sort elements based on place value
+    place = 1
+    while max_val // place > 0: 
+        counting_sort(arr, place)
+        place *= 10
 
 #Linear search algorithm function
 def linear_search(arr, target):
@@ -86,6 +121,7 @@ arr = generate_list(int(input("lower bound: ")), int(input("upper bound: ")), in
 print(arr)
 print(quick_sort(arr))
 print(quick_sort([123, 34, 5, 74, 235, 43, 63, 5, 9, 27, 83, 31]))
+print(radix_sort(arr))
 print(merge_sort([123, 34, 5, 74, 235, 43, 63, 5, 9, 27, 83, 31]))
 print(bubble_sort([123, 34, 5, 74, 235, 43, 63, 5, 9, 27, 83, 31]))
 print(linear_search([123, 34, 5, 74, 235, 43, 63, 5, 9, 27, 83, 31],5))
