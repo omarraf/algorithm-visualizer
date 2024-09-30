@@ -128,3 +128,4 @@ print(quick_sort(arr))
 print(merge_sort(arr))
 print(bubble_sort(arr))
 print(linear_search([123, 34, 5, 74, 235, 43, 63, 5, 9, 27, 83, 31],5))
+
