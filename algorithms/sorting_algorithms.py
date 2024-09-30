@@ -133,11 +133,13 @@ def linear_search(arr, target):
 def generate_list(lower_bound, upper_bound, size):
     return [random.randint(lower_bound, upper_bound) for i in range(size)]
     
-arr = generate_list(int(input("lower bound: ")), int(input("upper bound: ")), int(input("size: ")))
-print(arr)
-print(radix_sort(arr))
-print(quick_sort([123, 34, 5, 74, 235, 43, 63, 5, 9, 27, 83, 31]))
-print(merge_sort([123, 34, 5, 74, 235, 43, 63, 5, 9, 27, 83, 31]))
-print(bubble_sort([123, 34, 5, 74, 235, 43, 63, 5, 9, 27, 83, 31]))
-print(linear_search([123, 34, 5, 74, 235, 43, 63, 5, 9, 27, 83, 31],5))
+
+# arr = generate_list(int(input("lower bound: ")), int(input("upper bound: ")), int(input("size: ")))
+# print(arr)
+# print(radix_sort(arr))
+# print(quick_sort(arr))
+# print(merge_sort(arr))
+# print(bubble_sort(arr))
+# print(linear_search([123, 34, 5, 74, 235, 43, 63, 5, 9, 27, 83, 31],5))
+
 
