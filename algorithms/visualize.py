@@ -39,5 +39,6 @@ def run_animation(data_size):
 
 # For some reason when you change data_size to input() the graph doesnt show up, 
 # at least on my end 
+#data_size = int(input("prompt: "))    works for me- Eduardo
 data_size = 1000
 run_animation(data_size)
