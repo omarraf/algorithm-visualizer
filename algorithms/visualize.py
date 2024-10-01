@@ -3,6 +3,7 @@ import matplotlib.animation as animation
 import random
 import time
 from sorting_algorithms import bubble_sort, merge_sort, quick_sort, radix_sort
+from matplotlib.widgets import TextBox
 
 # Function to time sorting algos
 def time_sorting_algorithm(algorithm, arr):
@@ -14,6 +15,7 @@ def time_sorting_algorithm(algorithm, arr):
 
 fig, ax = plt.subplots()
 
+# Function to animate the algorithms
 def animate(i, data_size):
     algorithms = [bubble_sort, merge_sort, quick_sort, radix_sort]
     data = [random.randint(0, 10000) for _ in range(data_size)]  
@@ -32,13 +34,27 @@ def animate(i, data_size):
     ax.set_xlabel('Algorithms')
     ax.set_title(f'Sorting Algorithms Performance for Data Size {data_size}')
 
+
+ani = None
+
 def run_animation(data_size):
+    global ani
     ani = animation.FuncAnimation(fig, animate, frames=4, fargs=(data_size,), interval=1000, blit=False, repeat=False)
     plt.show()
 
-
 # For some reason when you change data_size to input() the graph doesnt show up, 
 # at least on my end 
-#data_size = int(input("prompt: "))    works for me- Eduardo
-data_size = 1000
-run_animation(data_size)
+#data_size = int(input("prompt: "))   # works for me- Eduardo # it also worked for me -Kalil
+#data_size = 1000
+#run_animation(data_size)
+
+# created a textbox to get the users data size.
+def submit(text):
+    data_size = int(text)
+    run_animation(data_size)
+
+# creates the textbox
+axbox = plt.axes([0.2, 0.01, 0.4, 0.05])  # the position of the textbox
+text_box = TextBox(axbox, "Enter Data Size: ")
+text_box.on_submit(submit)  
+plt.show()
