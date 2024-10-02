@@ -7,9 +7,9 @@ from matplotlib.widgets import TextBox, Button
 
 # Function to time sorting algorithms
 def time_sorting_algorithm(algorithm, arr):
-    start_time = time.time()
+    start_time = time.perf_counter()
     algorithm(arr)
-    end_time = time.time()
+    end_time = time.perf_counter()
     elapsed_time = (end_time - start_time) * 1000  # Convert seconds to milliseconds
     return elapsed_time
 
@@ -32,7 +32,14 @@ def animate(i):
     times = [time_sorting_algorithm(algorithm, data.copy()) for algorithm in algorithms]
 
     ax.clear()
-    ax.bar(labels, times, color=['red', 'green', 'orange', 'blue'])
+    bars = ax.bar(labels, times, color=['red', 'green', 'orange', 'blue'])
+
+    for i in range(len(bars)):
+        bar = bars[i]
+        time = times[i]
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width() / 2, height,f'{time:.3f}')
+
 
     if data_size > 100:
         ax.set_yscale('log')
