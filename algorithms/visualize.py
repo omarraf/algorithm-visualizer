@@ -98,6 +98,22 @@ axbox = plt.axes([0.2, 0.01, 0.4, 0.05])  # Position of the textbox
 text_box = TextBox(axbox, "Enter Data Size: ")
 text_box.on_submit(submit)
 
+# Buttons for selecting which algorithms to run
+axstart= plt.axes([0.015, 0.14, 0.14, 0.05])  # Position of bubble sort button
+bubble_button = Button(axstart, 'Bubble Sort') 
+
+axstart= plt.axes([0.163, 0.14, 0.14, 0.05]) # Position of merge sort button
+bubble_button = Button(axstart, 'Merge Sort')
+
+axstart= plt.axes([0.31, 0.14, 0.14, 0.05])# Position of quick sort button
+bubble_button = Button(axstart, 'Quick Sort')
+
+axstart= plt.axes([0.163, 0.08, 0.14, 0.05])# Position of radix sort button
+bubble_button = Button(axstart, 'Radix Sort')
+
+axstart= plt.axes([0.31, 0.08, 0.16, 0.05])# Position of linear search button
+bubble_button = Button(axstart, 'Linear Search')
+
 # Start, Pause, and Reset Buttons
 axstart = plt.axes([0.7, 0.1, 0.1, 0.075])  # Position of Start button
 start_button = Button(axstart, 'Start')
