@@ -93,6 +93,27 @@ def submit(text):
     except ValueError:
         data_size = None  # Reset if input is invalid
 
+# For delarcing what algortithms to run
+def run_bubble(event):
+    global bubble
+    bubble = True
+
+def run_merge(event):
+    global merge
+    merge = True
+
+def run_quick(event):
+    global quick
+    quick = True
+
+def run_radix(event):
+    global radix
+    radix = True
+
+def run_linear(event):
+    global linear
+    linear = True
+
 # Create TextBox to get user input for data size
 axbox = plt.axes([0.2, 0.01, 0.4, 0.05])  # Position of the textbox
 text_box = TextBox(axbox, "Enter Data Size: ")
@@ -101,18 +122,23 @@ text_box.on_submit(submit)
 # Buttons for selecting which algorithms to run
 axstart= plt.axes([0.015, 0.14, 0.14, 0.05])  # Position of bubble sort button
 bubble_button = Button(axstart, 'Bubble Sort') 
+bubble_button.on_clicked(run_bubble)
 
 axmerge= plt.axes([0.163, 0.14, 0.14, 0.05]) # Position of merge sort button
 merge_button = Button(axmerge, 'Merge Sort')
+merge_button.on_clicked(run_merge)
 
 axquick= plt.axes([0.31, 0.14, 0.14, 0.05])# Position of quick sort button
 quick_button = Button(axquick, 'Quick Sort')
+quick_button.on_clicked(run_quick)
 
 axradix= plt.axes([0.163, 0.08, 0.14, 0.05])# Position of radix sort button
 radix_button = Button(axradix, 'Radix Sort')
+radix_button.on_clicked(run_radix)
 
 axlinear= plt.axes([0.31, 0.08, 0.16, 0.05])# Position of linear search button
 linear_button = Button(axlinear, 'Linear Search')
+linear_button.on_clicked(run_linear)
 
 # Start, Pause, and Reset Buttons
 axstart = plt.axes([0.7, 0.1, 0.1, 0.075])  # Position of Start button
