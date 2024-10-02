@@ -102,17 +102,17 @@ text_box.on_submit(submit)
 axstart= plt.axes([0.015, 0.14, 0.14, 0.05])  # Position of bubble sort button
 bubble_button = Button(axstart, 'Bubble Sort') 
 
-axstart= plt.axes([0.163, 0.14, 0.14, 0.05]) # Position of merge sort button
-bubble_button = Button(axstart, 'Merge Sort')
+axmerge= plt.axes([0.163, 0.14, 0.14, 0.05]) # Position of merge sort button
+merge_button = Button(axmerge, 'Merge Sort')
 
-axstart= plt.axes([0.31, 0.14, 0.14, 0.05])# Position of quick sort button
-bubble_button = Button(axstart, 'Quick Sort')
+axquick= plt.axes([0.31, 0.14, 0.14, 0.05])# Position of quick sort button
+quick_button = Button(axquick, 'Quick Sort')
 
-axstart= plt.axes([0.163, 0.08, 0.14, 0.05])# Position of radix sort button
-bubble_button = Button(axstart, 'Radix Sort')
+axradix= plt.axes([0.163, 0.08, 0.14, 0.05])# Position of radix sort button
+radix_button = Button(axradix, 'Radix Sort')
 
-axstart= plt.axes([0.31, 0.08, 0.16, 0.05])# Position of linear search button
-bubble_button = Button(axstart, 'Linear Search')
+axlinear= plt.axes([0.31, 0.08, 0.16, 0.05])# Position of linear search button
+linear_button = Button(axlinear, 'Linear Search')
 
 # Start, Pause, and Reset Buttons
 axstart = plt.axes([0.7, 0.1, 0.1, 0.075])  # Position of Start button
