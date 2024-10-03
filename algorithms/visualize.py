@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import random
 import time
-from sorting_algorithms import bubble_sort, merge_sort, quick_sort, radix_sort
+from sorting_algorithms import bubble_sort, merge_sort, quick_sort, radix_sort, linear_search
 from matplotlib.widgets import TextBox, Button
 
 # Function to time sorting algorithms
@@ -20,19 +20,48 @@ plt.subplots_adjust(bottom=0.25)  # Adjust to make space for buttons
 is_paused = False
 data_size = None  # Initially None, waiting for user input
 ani = None  # Global reference to the animation object
+bubble = False
+merge = False
+quick = False
+radix = False
+linear = False
 
 # Function to animate the algorithms
 def animate(i):
     if is_paused:
         return  # Skip frame update if paused
-
-    algorithms = [bubble_sort, merge_sort, quick_sort, radix_sort]
+#add algorithms, labels and colors only if global variables of each are true
+    algorithms = []
+    labels = []
+    color = []
+    if bubble == True:
+        algorithms.append(bubble_sort)
+        labels.append('Bubble sort')
+        color.append('red')
+    if merge == True:
+        algorithms.append(merge_sort)
+        labels.append('Merge sort')
+        color.append('green')
+    if quick == True:
+        algorithms.append(quick_sort)
+        labels.append('Quick sort')
+        color.append('orange')
+    if radix == True:
+        algorithms.append(radix_sort)
+        labels.append('Radix sort')
+        color.append('blue')
+    if linear == True:
+        algoritms.append(linear_search)
+        labels.append('Linear search')
+        color.append('purple')
+    
     data = [random.randint(0, 10000) for _ in range(data_size)]  
-    labels = ['Bubble Sort', 'Merge Sort', 'Quick Sort', 'Radix Sort']
     times = [time_sorting_algorithm(algorithm, data.copy()) for algorithm in algorithms]
 
     ax.clear()
-    bars = ax.bar(labels, times, color=['red', 'green', 'orange', 'blue'])
+    bars = ax.bar(labels, times, color)  #once i changed it from color = ['red', 'orange', etc] it didnt work anymore
+                                        # efore i changed that part i could click all the algorithm buttons
+                                        #exept linear search and it would run the way it always ran
 
     for i in range(len(bars)):
         bar = bars[i]
@@ -93,7 +122,7 @@ def submit(text):
     except ValueError:
         data_size = None  # Reset if input is invalid
 
-# For delarcing what algortithms to run
+# For variables that decide what algortithms to run
 def run_bubble(event):
     global bubble
     bubble = True
@@ -120,8 +149,8 @@ text_box = TextBox(axbox, "Enter Data Size: ")
 text_box.on_submit(submit)
 
 # Buttons for selecting which algorithms to run
-axstart= plt.axes([0.015, 0.14, 0.14, 0.05])  # Position of bubble sort button
-bubble_button = Button(axstart, 'Bubble Sort') 
+axbubble= plt.axes([0.015, 0.14, 0.14, 0.05])  # Position of bubble sort button
+bubble_button = Button(axbubble, 'Bubble Sort') 
 bubble_button.on_clicked(run_bubble)
 
 axmerge= plt.axes([0.163, 0.14, 0.14, 0.05]) # Position of merge sort button
