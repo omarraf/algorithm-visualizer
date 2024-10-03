@@ -30,45 +30,43 @@ linear = False
 def animate(i):
     if is_paused:
         return  # Skip frame update if paused
-#add algorithms, labels and colors only if global variables of each are true
     algorithms = []
     labels = []
-    color = []
-    if bubble == True:
+    colors = []
+    if bubble:
         algorithms.append(bubble_sort)
         labels.append('Bubble sort')
-        color.append('red')
-    if merge == True:
+        colors.append('red')
+    if merge:
         algorithms.append(merge_sort)
         labels.append('Merge sort')
-        color.append('green')
-    if quick == True:
+        colors.append('green')
+    if quick:
         algorithms.append(quick_sort)
         labels.append('Quick sort')
-        color.append('orange')
-    if radix == True:
+        colors.append('orange')
+    if radix:
         algorithms.append(radix_sort)
         labels.append('Radix sort')
-        color.append('blue')
-    if linear == True:
-        algoritms.append(linear_search)
+        colors.append('blue')
+    if linear:
+        algorithms.append(linear_search)
         labels.append('Linear search')
-        color.append('purple')
-    
-    data = [random.randint(0, 10000) for _ in range(data_size)]  
+        colors.append('purple')
+
+    if not algorithms:
+        return  # No algorithms selected, nothing to animate
+
+    data = [random.randint(0, 10000) for _ in range(data_size)]
     times = [time_sorting_algorithm(algorithm, data.copy()) for algorithm in algorithms]
 
     ax.clear()
-    bars = ax.bar(labels, times, color)  #once i changed it from color = ['red', 'orange', etc] it didnt work anymore
-                                        # efore i changed that part i could click all the algorithm buttons
-                                        #exept linear search and it would run the way it always ran
-
+    bars = ax.bar(labels, times, color=colors)
     for i in range(len(bars)):
         bar = bars[i]
         time = times[i]
         height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width() / 2, height,f'{time:.3f}')
-
+        ax.text(bar.get_x() + bar.get_width() / 2, height, f'{time:.3f}', ha='center')
 
     if data_size > 100:
         ax.set_yscale('log')
