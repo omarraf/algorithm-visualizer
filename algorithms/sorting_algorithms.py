@@ -30,7 +30,7 @@ linear = False
 def animate(i):
     if is_paused:
         return  # Skip frame update if paused
-
+#add algorithms, labels and colors only if global variables of each are true
     algorithms = []
     labels = []
     color = []
@@ -59,7 +59,7 @@ def animate(i):
     times = [time_sorting_algorithm(algorithm, data.copy()) for algorithm in algorithms]
 
     ax.clear()
-    bars = ax.bar(labels, times, color)  #once i changed it from colors = ['red', 'orange', etc] it didnt work anymore
+    bars = ax.bar(labels, times, color)  #once i changed it from color = ['red', 'orange', etc] it didnt work anymore
                                         # efore i changed that part i could click all the algorithm buttons
                                         #exept linear search and it would run the way it always ran
 
