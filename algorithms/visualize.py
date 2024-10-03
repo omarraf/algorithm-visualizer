@@ -6,9 +6,13 @@ from sorting_algorithms import bubble_sort, merge_sort, quick_sort, radix_sort, 
 from matplotlib.widgets import TextBox, Button
 
 # Function to time sorting algorithms
-def time_sorting_algorithm(algorithm, arr):
+def time_sorting_algorithm(algorithm, arr, target = None):
     start_time = time.perf_counter()
-    algorithm(arr)
+    #for linear search
+    if algorithm == linear_search and target is not None:
+        algorithm(arr, target)
+    else:
+        algorithm(arr)
     end_time = time.perf_counter()
     elapsed_time = (end_time - start_time) * 1000  # Convert seconds to milliseconds
     return elapsed_time
@@ -19,6 +23,7 @@ plt.subplots_adjust(bottom=0.25)  # Adjust to make space for buttons
 # Global flag and variable to control animation
 is_paused = False
 data_size = None  # Initially None, waiting for user input
+target_value = None # Target for linear search
 ani = None  # Global reference to the animation object
 bubble = False
 merge = False
@@ -50,6 +55,9 @@ def animate(i):
         labels.append('Radix sort')
         colors.append('blue')
     if linear:
+        if target_value is None:  # Check if target_value is set
+            print("Error: Target value not set!")
+            return  # Skip if target is not provided
         algorithms.append(linear_search)
         labels.append('Linear search')
         colors.append('purple')
@@ -58,8 +66,15 @@ def animate(i):
         return  # No algorithms selected, nothing to animate
 
     data = [random.randint(0, 10000) for _ in range(data_size)]
-    times = [time_sorting_algorithm(algorithm, data.copy()) for algorithm in algorithms]
+    times = []
 
+     # Iterate through algorithms and gather their execution times
+    for algorithm in algorithms:
+        if algorithm == linear_search:
+            times.append(time_sorting_algorithm(algorithm, data.copy(), target_value))  # Pass target_value
+        else:
+            times.append(time_sorting_algorithm(algorithm, data.copy()))  # No target needed for sorting algorithms
+            
     ax.clear()
     bars = ax.bar(labels, times, color=colors)
     for i in range(len(bars)):
@@ -75,7 +90,7 @@ def animate(i):
         ax.set_ylabel('Time (ms)')
 
     ax.set_xlabel('Algorithms')
-    ax.set_title(f'Sorting Algorithms Performance for Data Size {data_size}')
+    ax.set_title(f'{labels} Visualization for Data Size {data_size}')
 
 # Function to start or restart the animation
 def run_animation():
@@ -110,7 +125,7 @@ def reset_animation(event):
     if ani is not None and ani.event_source is not None:
         ani.event_source.stop()  # Stop the animation only if it's running
     ax.clear()
-    ax.set_title("Sorting Algorithms Performance")  # Clear the plot
+    ax.set_title("Sorting Algorithms Visualization")  # Clear the plot
     plt.draw()
 
 # For TextBox submit callback
@@ -124,6 +139,14 @@ def submit(text):
         plt.draw()  # Update button appearance
     except ValueError:
         data_size = None  # Reset if input is invalid
+
+# For TextBox submit callback for target value
+def submit_target(text):
+    global target_value
+    try:
+        target_value = int(text)
+    except ValueError:
+        target_value = None  # Reset if input is invalid
 
 # For variables that decide what algortithms to run
 def run_bubble(event):
@@ -150,6 +173,12 @@ def run_linear(event):
 axbox = plt.axes([0.2, 0.01, 0.4, 0.05])  # Position of the textbox
 text_box = TextBox(axbox, "Enter Data Size: ")
 text_box.on_submit(submit)
+
+# Create TextBox for target input for linear search
+axbox_target = plt.axes([0.85, 0.01, 0.1, 0.075])  # Position of the textbox for target
+text_box_target = TextBox(axbox_target, "Enter Target Value: ")
+text_box_target.on_submit(submit_target)
+
 
 # Buttons for selecting which algorithms to run
 axbubble= plt.axes([0.015, 0.14, 0.14, 0.05])  # Position of bubble sort button
