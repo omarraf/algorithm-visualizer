@@ -100,8 +100,13 @@ def toggle_pause(event):
 
 # Reset function
 def reset_animation(event):
-    global ani, is_paused
+    global ani, is_paused, bubble, merge, quick, radix, linear
     is_paused = False
+    bubble = False
+    merge = False
+    quick = False
+    radix = False
+    linear = False
     if ani is not None and ani.event_source is not None:
         ani.event_source.stop()  # Stop the animation only if it's running
     ax.clear()
