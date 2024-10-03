@@ -59,7 +59,9 @@ def animate(i):
     times = [time_sorting_algorithm(algorithm, data.copy()) for algorithm in algorithms]
 
     ax.clear()
-    bars = ax.bar(labels, times, color)
+    bars = ax.bar(labels, times, color)  #once i changed it from colors = ['red', 'orange', etc] it didnt work anymore
+                                        # efore i changed that part i could click all the algorithm buttons
+                                        #exept linear search and it would run the way it always ran
 
     for i in range(len(bars)):
         bar = bars[i]
