@@ -3,13 +3,12 @@ import matplotlib.animation as animation
 import random
 import time
 from sorting_algorithms import bubble_sort, merge_sort, quick_sort, radix_sort, linear_search
-from matplotlib.widgets import TextBox, Button
+from matplotlib.widgets import TextBox, Button, CheckButtons
 
 # Function to time sorting algorithms
-def time_sorting_algorithm(algorithm, arr, target = None):
+def time_sorting_algorithm(algorithm, arr, target=None):
     start_time = time.perf_counter()
-    #for linear search
-    if algorithm == linear_search and target is not None:
+    if algorithm == linear_search:
         algorithm(arr, target)
     else:
         algorithm(arr)
@@ -18,46 +17,49 @@ def time_sorting_algorithm(algorithm, arr, target = None):
     return elapsed_time
 
 fig, ax = plt.subplots()
-plt.subplots_adjust(bottom=0.25)  # Adjust to make space for buttons
+plt.subplots_adjust(left=0.3, bottom=0.25, top=0.95, right=0.95)  # Adjust to make space for buttons
 
 # Global flag and variable to control animation
 is_paused = False
-data_size = None  # Initially None, waiting for user input
-target_value = None # Target for linear search
-ani = None  # Global reference to the animation object
-bubble = False
-merge = False
-quick = False
-radix = False
-linear = False
+data_size = None  
+target_value = None 
+custom_list = None
+ani = None  
+
+# Algorithm selection flags
+algorithm_flags = {
+    'Bubble sort': False,
+    'Merge sort': False,
+    'Quick sort': False,
+    'Radix sort': False,
+    'Linear search': False
+}
 
 # Function to animate the algorithms
 def animate(i):
+    global ani
     if is_paused:
         return  # Skip frame update if paused
     algorithms = []
     labels = []
     colors = []
-    if bubble:
+    if algorithm_flags['Bubble sort']:
         algorithms.append(bubble_sort)
         labels.append('Bubble sort')
         colors.append('red')
-    if merge:
+    if algorithm_flags['Merge sort']:
         algorithms.append(merge_sort)
         labels.append('Merge sort')
         colors.append('green')
-    if quick:
+    if algorithm_flags['Quick sort']:
         algorithms.append(quick_sort)
         labels.append('Quick sort')
         colors.append('orange')
-    if radix:
+    if algorithm_flags['Radix sort']:
         algorithms.append(radix_sort)
         labels.append('Radix sort')
         colors.append('blue')
-    if linear:
-        if target_value is None:  # Check if target_value is set
-            print("Error: Target value not set!")
-            return  # Skip if target is not provided
+    if algorithm_flags['Linear search']:
         algorithms.append(linear_search)
         labels.append('Linear search')
         colors.append('purple')
@@ -65,18 +67,16 @@ def animate(i):
     if not algorithms:
         return  # No algorithms selected, nothing to animate
 
-    data = [random.randint(0, 10000) for _ in range(data_size)]
-    times = []
+    if custom_list is not None:
+        data = custom_list
+    else:
+        data = [random.randint(0, 10000) for _ in range(data_size)]
+    
+    times = [time_sorting_algorithm(algorithm, data.copy(), target_value) for algorithm in algorithms]
 
-     # Iterate through algorithms and gather their execution times
-    for algorithm in algorithms:
-        if algorithm == linear_search:
-            times.append(time_sorting_algorithm(algorithm, data.copy(), target_value))  # Pass target_value
-        else:
-            times.append(time_sorting_algorithm(algorithm, data.copy()))  # No target needed for sorting algorithms
-            
     ax.clear()
-    bars = ax.bar(labels, times, color=colors)
+    bar_width = 0.4  # Fixed width for bars
+    bars = ax.bar(labels, times, color=colors, width=bar_width)
     for i in range(len(bars)):
         bar = bars[i]
         time = times[i]
@@ -90,7 +90,10 @@ def animate(i):
         ax.set_ylabel('Time (ms)')
 
     ax.set_xlabel('Algorithms')
-    ax.set_title(f'{labels} Visualization for Data Size {data_size}')
+    ax.set_title(f'Sorting Algorithms Performance for Data Size {data_size}')
+
+    # Adjust x-axis limits to provide padding
+    ax.set_xlim(-0.5, len(labels) - 0.5)
 
 # Function to start or restart the animation
 def run_animation():
@@ -100,7 +103,7 @@ def run_animation():
         ani.event_source.stop()  # Stop any previous animation only if it's running
 
     # Start a new animation, using 100 frames (non-repeating)
-    ani = animation.FuncAnimation(fig, animate, frames=100, interval=1000, blit=False, repeat=False)
+    ani = animation.FuncAnimation(fig, animate, frames=60, interval=1000, blit=False, repeat=False)
     plt.draw()  # Make sure the plot updates
 
 # For pausing/resuming the animation
@@ -115,17 +118,13 @@ def toggle_pause(event):
 
 # Reset function
 def reset_animation(event):
-    global ani, is_paused, bubble, merge, quick, radix, linear
+    global ani, is_paused, custom_list
     is_paused = False
-    bubble = False
-    merge = False
-    quick = False
-    radix = False
-    linear = False
+    custom_list = None  # Reset custom list
     if ani is not None and ani.event_source is not None:
         ani.event_source.stop()  # Stop the animation only if it's running
     ax.clear()
-    ax.set_title("Sorting Algorithms Visualization")  # Clear the plot
+    ax.set_title("Sorting Algorithms Performance")  # Clear the plot
     plt.draw()
 
 # For TextBox submit callback
@@ -134,7 +133,6 @@ def submit(text):
     try:
         data_size = int(text)
         start_button.color = '0.85'  # Enable the button (visually)
-        #start_button.hovercolor = '0.95'
         start_button.on_clicked(lambda event: run_animation())  # Activate callback
         plt.draw()  # Update button appearance
     except ValueError:
@@ -148,74 +146,64 @@ def submit_target(text):
     except ValueError:
         target_value = None  # Reset if input is invalid
 
-# For variables that decide what algortithms to run
-def run_bubble(event):
-    global bubble
-    bubble = True
+# For TextBox submit callback for custom list
+def submit_custom_list(text):
+    global custom_list, data_size, start_button
+    try:
+        custom_list = [int(x) for x in text.split(',')]
+        data_size = len(custom_list)
+        start_button.color = '0.85'  # Enable the button (visually)
+        start_button.on_clicked(lambda event: run_animation())  # Activate callback
+        plt.draw()  # Update button appearance
+    except ValueError:
+        custom_list = None  # Reset if input is invalid
 
-def run_merge(event):
-    global merge
-    merge = True
-
-def run_quick(event):
-    global quick
-    quick = True
-
-def run_radix(event):
-    global radix
-    radix = True
-
-def run_linear(event):
-    global linear
-    linear = True
+# For CheckButtons callback
+def update_algorithm_flags(label):
+    algorithm_flags[label] = not algorithm_flags[label]
+    if label == 'Linear search' and algorithm_flags[label]:
+        target_box.set_active(True)
+    else:
+        target_box.set_active(False)
 
 # Create TextBox to get user input for data size
-axbox = plt.axes([0.2, 0.01, 0.4, 0.05])  # Position of the textbox
+axbox = plt.axes([0.1, 0.01, 0.2, 0.05])  # Position of the textbox
 text_box = TextBox(axbox, "Enter Data Size: ")
+text_box.label.set_color('blue')
 text_box.on_submit(submit)
 
-# Create TextBox for target input for linear search
-axbox_target = plt.axes([0.85, 0.01, 0.1, 0.075])  # Position of the textbox for target
-text_box_target = TextBox(axbox_target, "Enter Target Value: ")
-text_box_target.on_submit(submit_target)
+# Create TextBox to get user input for target value (initially hidden)
+axtarget = plt.axes([0.1, 0.07, 0.2, 0.05])  # Position of the target textbox
+target_box = TextBox(axtarget, "Enter Target Value: ")
+target_box.label.set_color('blue')
+target_box.on_submit(submit_target)
+target_box.set_active(False)  # Initially hidden
 
+# Create TextBox to get user input for custom list
+axcustom = plt.axes([0.1, 0.13, 0.2, 0.05])  # Position of the custom list textbox
+custom_box = TextBox(axcustom, "Enter Custom List: ")
+custom_box.label.set_color('blue')
+custom_box.on_submit(submit_custom_list)
 
-# Buttons for selecting which algorithms to run
-axbubble= plt.axes([0.015, 0.14, 0.14, 0.05])  # Position of bubble sort button
-bubble_button = Button(axbubble, 'Bubble Sort') 
-bubble_button.on_clicked(run_bubble)
-
-axmerge= plt.axes([0.163, 0.14, 0.14, 0.05]) # Position of merge sort button
-merge_button = Button(axmerge, 'Merge Sort')
-merge_button.on_clicked(run_merge)
-
-axquick= plt.axes([0.31, 0.14, 0.14, 0.05])# Position of quick sort button
-quick_button = Button(axquick, 'Quick Sort')
-quick_button.on_clicked(run_quick)
-
-axradix= plt.axes([0.163, 0.08, 0.14, 0.05])# Position of radix sort button
-radix_button = Button(axradix, 'Radix Sort')
-radix_button.on_clicked(run_radix)
-
-axlinear= plt.axes([0.31, 0.08, 0.16, 0.05])# Position of linear search button
-linear_button = Button(axlinear, 'Linear Search')
-linear_button.on_clicked(run_linear)
+# CheckButtons for selecting which algorithms to run
+rax = plt.axes([0.01, 0.4, 0.25, 0.5], frameon = False)  # Increase the width and height of the check buttons
+check = CheckButtons(rax, algorithm_flags.keys(), algorithm_flags.values())
+check.on_clicked(update_algorithm_flags)
 
 # Start, Pause, and Reset Buttons
 axstart = plt.axes([0.7, 0.1, 0.1, 0.075])  # Position of Start button
-start_button = Button(axstart, 'Start')
+start_button = Button(axstart, 'Start', color='lightgreen', hovercolor='green')
 
 # Initially, disable the "Start" button (grayed out)
 start_button.color = '#FFFFFF'  # Grayed out color
-#start_button.hovercolor = '0.75'
 start_button.on_clicked(lambda event: None)  # Initially no action
 
 axpause = plt.axes([0.81, 0.1, 0.1, 0.075])  # Position of Pause button
-pause_button = Button(axpause, 'Pause')
+pause_button = Button(axpause, 'Pause', color='lightblue', hovercolor='blue')
 pause_button.on_clicked(toggle_pause)
 
 axreset = plt.axes([0.59, 0.1, 0.1, 0.075])  # Position of Reset button
-reset_button = Button(axreset, 'Reset')
+reset_button = Button(axreset, 'Reset', color='lightcoral', hovercolor='red')
 reset_button.on_clicked(reset_animation)
 
 plt.show()
